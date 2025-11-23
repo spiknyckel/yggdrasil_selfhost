@@ -47,7 +47,7 @@ enum AccountServerKind {
 
 #[derive(Deserialize)]
 struct Res {
-    username: String
+    uuid: String
 }
 
 impl AccountServerKind {
@@ -64,7 +64,7 @@ impl AccountServerKind {
                 let Ok(resp) = resp else {
                     return None;
                 };
-                resp.json::<Res>().await.map(|r| r.username).ok()
+                resp.json::<Res>().await.map(|r| r.uuid).ok()
             }
             AccountServerKind::File(hash_map) => {
                 hash_map.get(k).cloned()
@@ -109,7 +109,7 @@ async fn main() {
         .route("/session/minecraft/hasJoined", get(has_joined_handler))
         .with_state((accounts, sessions));
 
-    let address = std::env::var("YGG_BIND_ADDRESS").unwrap_or("0.0.0.0:3000".to_string());
+    let address = std::env::var("YGG_BIND_ADDRESS").unwrap_or("0.0.0.0:3012".to_string());
     let listener = tokio::net::TcpListener::bind(address)
         .await
         .expect("failed to parse tcp port");
